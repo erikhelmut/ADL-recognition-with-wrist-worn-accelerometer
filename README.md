@@ -1,0 +1,1 @@
+# ADL-recognition-with-wrist-worn-accelerometer
