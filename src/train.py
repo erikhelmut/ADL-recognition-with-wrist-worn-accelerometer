@@ -7,7 +7,7 @@ import torch
 from torch.utils.tensorboard import SummaryWriter
 from torch.utils.data import DataLoader
 
-from utils.data import ADLDataset
+from utils.data import init_datasets, ADLDataset
 from model import WISTAR
 
 
@@ -48,7 +48,7 @@ def train_one_epoch(model, criterion, optimizer, epoch_index, tb_writer, train_l
         device (torch.device): device to be used for training 
 
     Returns:
-        last_loss (float): average loss over the last 10 batches
+        last_loss (float): average loss over the last 100 batches
     """
 
     # initliaze running and last loss
@@ -56,7 +56,7 @@ def train_one_epoch(model, criterion, optimizer, epoch_index, tb_writer, train_l
     last_loss = 0.0
 
     # loop over the dataset multiple times (one epoch)
-    for i, (input, lable) in enumerate(train_loader):
+    for i, (input, label) in enumerate(train_loader):
 
         # prepare input and label
         input = input.to(device)
@@ -77,8 +77,8 @@ def train_one_epoch(model, criterion, optimizer, epoch_index, tb_writer, train_l
 
         # gather data and report
         running_loss += loss.item()
-        if i % 10 == 9:
-            last_loss = running_loss / 10  # average loss over the last 10 batches
+        if i % 100 == 99:
+            last_loss = running_loss / 100  # average loss over the last 100 batches
             print("  batch {} loss: {}".format(i + 1, last_loss))
             tb_x = epoch_index * len(train_loader) + i + 1
             tb_writer.add_scalar("Loss/train", last_loss, tb_x)
@@ -108,8 +108,7 @@ def main(config):
     device = setup_device()
 
     # create datasets
-    train_dataset = ADLDataset()
-    val_dataset = ADLDataset()
+    train_dataset, val_dataset, _ = init_datasets(config["data_path"], train_split=config["train_split"], val_split=config["val_split"], seed=config["seed"])
 
     # create dataloaders for our datasets; shuffle for training, not for validation
     train_loader = DataLoader(train_dataset, batch_size=config["batch_size"], shuffle=True)
@@ -117,7 +116,7 @@ def main(config):
 
     # initialize network, criterion and optimizer
     model = WISTAR(config["input_size"], config["hidden_size"], config["n_layers"], config["n_adl"]).to(device)
-    criterion = torch.nn.NNLLLoss()
+    criterion = torch.nn.NLLLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=config["learning_rate"])
 
     # create a timestamped subdirectory for this run
@@ -156,10 +155,10 @@ def main(config):
 
         # compute the average validation loss for this epoch
         avg_vloss = running_vloss / (i + 1)
-        print("LOSS train {} val {}".format(avg_loss, avg_vloss))
+        print("LOSS train {} val {}\n".format(avg_loss, avg_vloss))
 
         # log the running loss averaged per batch for both training and validation
-        writer.add_scalars("Training vs Validatino Loss",
+        writer.add_scalars("Training vs Validation Loss",
                            { "Training" : avg_loss, "Validation" : avg_vloss },
                             epoch_number + 1)
         writer.flush()
@@ -177,7 +176,7 @@ if __name__ == "__main__":
 
     # parse arguments
     parser = argparse.ArgumentParser(description="Train the WISTAR")
-    parser.add_argument("-c", "--config", type=str, default="train_config.yaml", help="Path to the configuration file for training the WISTAR")
+    parser.add_argument("-c", "--config", type=str, default="config.yaml", help="Path to the configuration file for training the WISTAR")
     args = parser.parse_args()
 
     # load configuration file

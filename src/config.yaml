@@ -1,10 +1,13 @@
 data_path: ../HMP_Dataset/
+train_split: 0.6
+val_split: 0.2
+seed: 42
 run_path: ../runs/
 model_path: ../models/
 input_size: 3
-hidden_size: 128
-n_layers: 1
+hidden_size: 256
+n_layers: 2
 n_adl: 14
 batch_size: 1
-epochs: 100
+epochs: 50
 learning_rate: 0.001
