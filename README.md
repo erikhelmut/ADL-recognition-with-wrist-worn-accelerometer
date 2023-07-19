@@ -51,6 +51,9 @@
         <li>
           <a href="#visualizing">Visualizing</a>
         </li>
+        <li>
+          <a href="#configuration">Configuration</a>
+        </li>
       </ol>
     </li>
     <li>
