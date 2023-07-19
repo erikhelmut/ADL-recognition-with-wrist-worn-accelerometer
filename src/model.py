@@ -45,7 +45,6 @@ class WISTAR(nn.Module):
             y (torch.tensor): output tensor of the network
         """        
 
-
         # initial hidden- & cell state
         h0 = torch.zeros(self.n_layers, x.size(0), self.hidden_size).to(device)
         c0 = torch.zeros(self.n_layers, x.size(0), self.hidden_size).to(device)
