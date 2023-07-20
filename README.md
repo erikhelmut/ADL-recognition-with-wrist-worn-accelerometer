@@ -10,7 +10,7 @@
   <h3 align="center">Enhance our understanding of human actions with neural networks.</h3>
 
   <p align="center">
-    Neural cellular automata (NCA) represent an incredible fusion of neural networks and cellular automata, enabling the simulation of complex systems and showcasing remarkable emergent behavior. NCAs offer a captivating approach to studying and understanding dynamic systems in various fields such as physics, biology, and artificial intelligence, making them truly amazing tools for exploration and discovery.
+    Add Description here ...
     <br />
     <a href="https://www.researchgate.net/publication/261415865_Analysis_of_human_behavior_recognition_algorithms_based_on_acceleration_data"><strong>Analysis of human behavior recognition algorithms based on acceleration data »</strong></a>
     <br />  
