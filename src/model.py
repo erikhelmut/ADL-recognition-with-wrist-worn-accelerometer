@@ -31,6 +31,7 @@ class WISTAR(nn.Module):
         self.fc1 = nn.Linear(hidden_size, hidden_size)
         self.fc2 = nn.Linear(hidden_size, n_adl)
         self.dropout = nn.Dropout(p=0.25)
+        self.relu = nn.ReLU()
         self.softmax = nn.LogSoftmax(dim=1)
 
 
@@ -58,6 +59,7 @@ class WISTAR(nn.Module):
         # pass through fully connected layers
         h = self.fc1(h)
         h = self.dropout(h)
+        h = self.relu(h)
         h = self.fc2(h)
 
         # apply softmax to get probabilities

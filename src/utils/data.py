@@ -85,6 +85,9 @@ def init_datasets(root_dir, train_split=0.6, val_split=0.2, seed=42):
         test_dataset (ADLDataset): dataset for testing
     """
 
+    # TODO: iterate over folders and make sure that each dataset includes samples of each folder with given split
+    # if there are only 3 files, assign each file to one dataset
+
     # check if train_split + val_split < 1.0
     assert train_split + val_split < 1.0, "train_split + val_split must be less than 1.0"
 

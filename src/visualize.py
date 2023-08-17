@@ -25,11 +25,12 @@ def main(config):
 
     # load model
     model = WISTAR(config["input_size"], config["hidden_size"], config["n_layers"], config["n_adl"])
-    model.load_state_dict(torch.load("../models/WISTAR_19072023-163205_33.pt"))
+    model.load_state_dict(torch.load("../models/WISTAR_17082023-125201_41.pt"))
     model.eval()
 
     # load test dataset
-    _, _, test_dataset = init_datasets(config["data_path"], config["train_split"], config["val_split"], config["seed"])
+    #_, _, test_dataset = init_datasets(config["data_path"], config["train_split"], config["val_split"], config["seed"])
+    _, _, test_dataset = init_datasets(config["data_path"], 0, 0, config["seed"])
 
     # create dataloader for test dataset
     test_loader = DataLoader(test_dataset, batch_size=config["batch_size"], shuffle=False)
@@ -65,14 +66,14 @@ def main(config):
         print("Accuracy: {}%".format(acc))
 
         # normalize confusion matrix and set NaNs to 0
-        confusion = confusion / confusion.sum(dim=1, keepdim=True)
+        confusion = confusion / confusion.sum(dim=0, keepdim=True)
         confusion[confusion != confusion] = 0
 
         # plot confusion matrix
         plt.imshow(confusion, cmap="viridis")
         plt.colorbar()
-        plt.xlabel("Predicted")
-        plt.ylabel("Actual")
+        plt.xlabel("Actual")
+        plt.ylabel("Predicted")
         plt.xticks(range(config["n_adl"]), test_dataset.adl, rotation=90)
         plt.yticks(range(config["n_adl"]), test_dataset.adl)
         plt.show()
