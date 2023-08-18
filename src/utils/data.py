@@ -84,19 +84,16 @@ def init_datasets(root_dir, train_split=0.6, val_split=0.2, seed=42):
         val_dataset (ADLDataset): dataset for validation
         test_dataset (ADLDataset): dataset for testing
     """
-
-    # TODO: iterate over folders and make sure that each dataset includes samples of each folder with given split
-    # if there are only 3 files, assign each file to one dataset
-
     # check if train_split + val_split < 1.0
     assert train_split + val_split < 1.0, "train_split + val_split must be less than 1.0"
 
     # get all files
-    files = []
+    samples = dict()
 
     # get all folders
     folders = os.listdir(root_dir)
 
+    num_samples = 0
     # loop over all folders
     for folder in folders:
         # check if folder is a directory
@@ -104,26 +101,43 @@ def init_datasets(root_dir, train_split=0.6, val_split=0.2, seed=42):
             # check if folder ends with "_MODEL", if so, skip
             if folder.endswith("_MODEL"):
                 continue
+            #create empty list for files
+            samples[folder] = []
             # loop over all files in folder and append to list
             for file in os.listdir(root_dir + folder):
-                files.append(root_dir + folder + "/" + file)
+                samples[folder].append(root_dir + folder + "/" + file)
+                num_samples += 1
 
-    print("Found {} files".format(len(files)))
+    print("Found {} files".format(num_samples))
 
     # get all ADLs and sort them
-    adl = list(set([f.split(".")[-2].split("-")[-2] for f in files]))
+    # adl = list(set([f.split(".")[-2].split("-")[-2] for f in files])) --> old version
+    adl = list(samples.keys())
     adl.sort()
 
     print("Found {} ADLs".format(len(adl)))
-
-    # set random seed and shuffle files
-    np.random.seed(seed)
-    np.random.shuffle(files)
-
     # split files into train, val and test
-    train_files = files[:int(train_split * len(files))]
-    val_files = files[int(train_split * len(files)):int((train_split + val_split) * len(files))]
-    test_files = files[int((train_split + val_split) * len(files)):]
+    train_files = []
+    val_files = []
+    test_files = []
+
+    for adl in adl:
+        # get all files for current adl
+        files = samples[adl]
+        # shuffle files
+        np.random.seed(seed)
+        np.random.shuffle(files)
+        # split files
+        assert (len(files) >= 3), "Less than three files for ADL {}".format(adl)
+        # make shure that each dataset includes at least one sample of each folder
+        train_files.append([0])
+        val_files.append([1])
+        test_files.append([2])
+        # split remaining files
+        files = files[3:]
+        train_files += files[:int(train_split * len(files))]
+        val_files += files[int(train_split * len(files)):int((train_split + val_split) * len(files))]
+        test_files += files[int((train_split + val_split) * len(files)):]
 
     print("Split files into {} train, {} val and {} test files.\n".format(len(train_files), len(val_files),
                                                                         len(test_files)))
