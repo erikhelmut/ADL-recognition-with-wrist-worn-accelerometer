@@ -25,12 +25,11 @@ def main(config):
 
     # load model
     model = WISTAR(config["input_size"], config["hidden_size"], config["n_layers"], config["n_adl"])
-    model.load_state_dict(torch.load("../models/WISTAR_17082023-125201_41.pt"))
+    model.load_state_dict(torch.load("../models/WISTAR_22082023-130721_44.pt"))
     model.eval()
 
     # load test dataset
-    #_, _, test_dataset = init_datasets(config["data_path"], config["train_split"], config["val_split"], config["seed"])
-    _, _, test_dataset = init_datasets(config["data_path"], 0, 0, config["seed"])
+    _, _, test_dataset = init_datasets(config["data_path"], config["train_split"], config["val_split"], config["seed"])
 
     # create dataloader for test dataset
     test_loader = DataLoader(test_dataset, batch_size=config["batch_size"], shuffle=False)

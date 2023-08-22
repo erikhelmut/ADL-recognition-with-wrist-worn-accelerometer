@@ -1,6 +1,6 @@
 data_path: ../HMP_Dataset/
-train_split: 0.6
-val_split: 0.2
+train_split: 0.7
+val_split: 0.1
 seed: 42
 run_path: ../runs/
 model_path: ../models/
