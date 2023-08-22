@@ -121,18 +121,18 @@ def init_datasets(root_dir, train_split=0.6, val_split=0.2, seed=42):
     val_files = []
     test_files = []
 
-    for adl in adl:
+    for curr_adl in adl:
         # get all files for current adl
-        files = samples[adl]
+        files = samples[curr_adl]
         # shuffle files
         np.random.seed(seed)
         np.random.shuffle(files)
         # split files
-        assert (len(files) >= 3), "Less than three files for ADL {}".format(adl)
+        assert (len(files) >= 3), "Less than three files for ADL {}".format(curr_adl)
         # make shure that each dataset includes at least one sample of each folder
-        train_files.append([0])
-        val_files.append([1])
-        test_files.append([2])
+        train_files.append(files[0])
+        val_files.append(files[1])
+        test_files.append(files[2])
         # split remaining files
         files = files[3:]
         train_files += files[:int(train_split * len(files))]
@@ -141,6 +141,9 @@ def init_datasets(root_dir, train_split=0.6, val_split=0.2, seed=42):
 
     print("Split files into {} train, {} val and {} test files.\n".format(len(train_files), len(val_files),
                                                                         len(test_files)))
+
+    # make all ADLs lowercase
+    adl = [a.lower() for a in adl]
 
     # create datasets for train, val and test
     train_dataset = ADLDataset(files=train_files, adl=adl)
