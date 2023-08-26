@@ -116,7 +116,7 @@ def main(config):
 
     # initialize network, criterion and optimizer
     model = WISTAR(config["input_size"], config["hidden_size"], config["n_layers"], config["n_adl"]).to(device)
-    model.load_state_dict(torch.load("../models/WISTAR_22082023-124009_38.pt"))
+    model.load_state_dict(torch.load("../models/WISTAR_22082023-124009_38.pt", map_location=device))
     criterion = torch.nn.NLLLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=config["learning_rate"])
 
