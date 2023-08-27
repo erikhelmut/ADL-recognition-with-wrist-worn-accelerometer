@@ -5,7 +5,7 @@ import torch
 from torch.utils.data import DataLoader
 import matplotlib.pyplot as plt
 
-from utils.data import init_datasets, ADLDataset
+from utils.data import init_datasets
 from model import WISTAR
 
 
@@ -69,8 +69,8 @@ def main(config):
 
         # calculate true positives, false positives, true negatives and false negatives
         tp = confusion.diag()
-        fp = (confusion.sum(dim=0) - tp) / (config["n_adl"] - 1)
-        fn = (confusion.sum(dim=1) - tp) / (config["n_adl"] - 1)
+        fp = confusion.sum(dim=0) - tp
+        fn = confusion.sum(dim=1) - tp
         tn = (confusion.sum() - (tp + fp + fn)) / (config["n_adl"] - 1)
 
         # print true positives and true negatives for each ADL
