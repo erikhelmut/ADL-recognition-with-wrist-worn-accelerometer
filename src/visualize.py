@@ -20,9 +20,11 @@ def main(config):
         None
     """
 
+    device = torch.device("cpu")
+
     # load model
     model = WISTAR(config["input_size"], config["hidden_size"], config["n_layers"], config["n_adl"])
-    model.load_state_dict(torch.load("../models/WISTAR_22082023-130721_44.pt", map_location=torch.device("cpu")))
+    model.load_state_dict(torch.load("../models/WISTAR_22082023-130721_44.pt", map_location=device))
     model.eval()
 
     # load test dataset
