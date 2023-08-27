@@ -10,7 +10,7 @@
   <h3 align="center">Enhance our understanding of human actions with neural networks.</h3>
 
   <p align="center">
-    Add Description here ...
+    Mastering the recognition of Activities of Daily Living, our model enhances understanding and impact in human activity analysis. Its adeptness in categorizing routine activities not only enhances behavioral insights but also fuels applications in healthcare and beyond.
     <br />
     <a href="https://www.researchgate.net/publication/261415865_Analysis_of_human_behavior_recognition_algorithms_based_on_acceleration_data"><strong>Analysis of human behavior recognition algorithms based on acceleration data »</strong></a>
     <br />  
@@ -94,6 +94,9 @@ $ conda create --name ADLR --file requirements.txt
 $ conda activate ADLR
 ```
 
+#### Step 3: Install PyTorch
+To install PyTorch, please follow the instructions on the [official website](https://pytorch.org/get-started/locally/).
+
 
 <!-- USAGE -->
 ## Usage
@@ -115,7 +118,7 @@ $ tensorboard --logdir runs/
 ### Visualizing
 To visualize the trained WISTAR model, run the following command:
 ```
-$ cd neural-cellular-automata/src/
+$ cd ADL-recognition-with-wrist-worn-accelerometer/src/
 $ python3 visualize.py --config config.yaml
 ```
 
