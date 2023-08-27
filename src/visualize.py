@@ -53,7 +53,7 @@ def main(config):
             predicted_idx = torch.argmax(output, dim=1)
 
             # update confusion matrix
-            confusion[predicted_idx, label] += 1
+            confusion[label, predicted_idx] += 1
 
             # update number of correct predictions and number of samples
             n_correct += (predicted_idx == label).item()
@@ -64,14 +64,24 @@ def main(config):
         print("Accuracy: {}%".format(acc))
 
         # normalize confusion matrix and set NaNs to 0
-        confusion = confusion / confusion.sum(dim=0, keepdim=True)
+        confusion = confusion / confusion.sum(dim=1, keepdim=True)
         confusion[confusion != confusion] = 0
+
+        # calculate true positives, false positives, true negatives and false negatives
+        tp = confusion.diag()
+        fp = (confusion.sum(dim=0) - tp) / (config["n_adl"] - 1)
+        fn = (confusion.sum(dim=1) - tp) / (config["n_adl"] - 1)
+        tn = (confusion.sum() - (tp + fp + fn)) / (config["n_adl"] - 1)
+
+        # print true positives and true negatives for each ADL
+        for i in range(config["n_adl"]):
+            print("ADL {}: TP = {}, TN = {}".format(test_dataset.adl[i], tp[i], tn[i]))
 
         # plot confusion matrix
         plt.imshow(confusion, cmap="viridis")
         plt.colorbar()
-        plt.xlabel("Actual")
-        plt.ylabel("Predicted")
+        plt.xlabel("Predicted")
+        plt.ylabel("Actual")
         plt.xticks(range(config["n_adl"]), test_dataset.adl, rotation=90)
         plt.yticks(range(config["n_adl"]), test_dataset.adl)
         plt.show()
